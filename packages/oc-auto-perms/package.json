@@ -1,0 +1,53 @@
+{
+  "name": "oc-auto-perms",
+  "version": "0.1.0",
+  "description": "Intent-aware OpenCode permissions powered by TypeSafe AI's Jev model.",
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "permissions",
+    "typesafe-ai",
+    "jev"
+  ],
+  "author": "Ope Oginni",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpeOginni/oc-plugins.git",
+    "directory": "packages/oc-auto-perms"
+  },
+  "homepage": "https://github.com/OpeOginni/oc-plugins/tree/main/packages/oc-auto-perms#readme",
+  "bugs": {
+    "url": "https://github.com/OpeOginni/oc-plugins/issues"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "tsup",
+    "prepack": "bun run build",
+    "check": "tsc --noEmit",
+    "test": "bun test",
+    "prepublishOnly": "bun run check && bun test",
+    "publish:dry-run": "bun publish --dry-run",
+    "release": "bun publish"
+  },
+  "dependencies": {
+    "@opencode/plugin": "0.0.0-beta-19378",
+    "@typesafe-ai/sdk": "^0.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.0"
+  }
+}

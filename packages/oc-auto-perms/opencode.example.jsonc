@@ -1,0 +1,42 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permissions": [
+    { "action": "*", "resource": "*", "effect": "ask" },
+    { "action": "shell", "resource": "*", "effect": "allow" },
+    { "action": "webfetch", "resource": "*", "effect": "allow" },
+    { "action": "websearch", "resource": "*", "effect": "allow" }
+  ],
+  "plugins": [
+    {
+      "package": "./dist",
+      "options": {
+        // Set TYPESAFE_API_KEY in .env or the server environment.
+        // Only these tools incur a Jev evaluation.
+        "guardedTools": ["shell", "webfetch", "websearch"],
+        "permissions": [
+          {
+            "tools": ["shell"],
+            "effect": "allow",
+            "examples": ["git status", "git diff --stat"],
+            "when": "The command only inspects repository status."
+          },
+          {
+            "tools": ["shell", "webfetch", "websearch"],
+            "effect": "allow",
+            "examples": [
+              "webfetch https://google.com/about",
+              "curl https://maps.google.com",
+              "websearch site:google.com Gemini documentation",
+              "!webfetch https://example.com",
+              "!curl https://api.github.com"
+            ],
+            "when": "The action only accesses or retrieves web content from google.com or its subdomains."
+          },
+          { "effect": "deny", "when": "The action sends secrets or credentials over the network." }
+        ],
+        "minConfidence": 0.8,
+        "historyLimit": 8
+      }
+    }
+  ]
+}
