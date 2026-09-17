@@ -15,12 +15,6 @@ Set `TYPESAFE_API_KEY` in `.env` or the OpenCode server environment, then config
 ```jsonc
 {
   "$schema": "https://opencode.ai/config.json",
-  "permissions": [
-    { "action": "*", "resource": "*", "effect": "ask" },
-    { "action": "shell", "resource": "*", "effect": "allow" },
-    { "action": "webfetch", "resource": "*", "effect": "allow" },
-    { "action": "websearch", "resource": "*", "effect": "allow" }
-  ],
   "plugins": [
     {
       "package": "oc-auto-perms",
