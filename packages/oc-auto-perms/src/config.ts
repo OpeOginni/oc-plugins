@@ -73,7 +73,7 @@ export const settingsFrom = (options: Record<string, unknown>): Settings => {
     throw new Error('oc-auto-perms: options.minConfidence must be between 0 and 1.')
   }
 
-  const historyLimit = options.historyLimit ?? 8
+  const historyLimit = options.historyLimit ?? 3
   if (!Number.isInteger(historyLimit) || typeof historyLimit !== 'number' || historyLimit < 1 || historyLimit > 50) {
     throw new Error('oc-auto-perms: options.historyLimit must be an integer between 1 and 50.')
   }

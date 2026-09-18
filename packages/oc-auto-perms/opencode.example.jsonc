@@ -35,7 +35,7 @@
           { "effect": "deny", "when": "The action sends secrets or credentials over the network." }
         ],
         "minConfidence": 0.8,
-        "historyLimit": 8
+        "historyLimit": 3
       }
     }
   ]

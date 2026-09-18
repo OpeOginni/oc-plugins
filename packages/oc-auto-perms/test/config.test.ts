@@ -7,7 +7,7 @@ test('settings use conservative defaults', () => {
     guardedTools: 'all',
     permissions: [{ effect: 'deny', when: 'Only access google.com.' }],
     minConfidence: 0.8,
-    historyLimit: 8,
+    historyLimit: 3,
   })
 })
 
