@@ -1,0 +1,63 @@
+{
+  "name": "oc-invaders",
+  "version": "0.1.0",
+  "description": "Play TUI Invaders inside OpenCode while your agent works.",
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "opentui",
+    "game",
+    "space-invaders"
+  ],
+  "author": "Ope Oginni",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpeOginni/oc-plugins.git",
+    "directory": "packages/oc-invaders"
+  },
+  "homepage": "https://github.com/OpeOginni/oc-plugins/tree/main/packages/oc-invaders#readme",
+  "bugs": {
+    "url": "https://github.com/OpeOginni/oc-plugins/issues"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./tui": "./dist/tui.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "tsup",
+    "prepack": "bun run build",
+    "check": "tsc --noEmit",
+    "test": "bun test",
+    "prepublishOnly": "bun run check && bun test",
+    "publish:dry-run": "bun publish --dry-run",
+    "release": "bun publish"
+  },
+  "dependencies": {
+    "@opencode/plugin": "0.0.0-beta-19378",
+    "tui-invaders": "^0.3.0"
+  },
+  "peerDependencies": {
+    "@opentui/core": ">=0.5.11",
+    "@opentui/solid": ">=0.5.10",
+    "solid-js": ">=1.9.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-typescript": "^7.27.1",
+    "@types/bun": "^1.4.2",
+    "@types/node": "^22",
+    "babel-preset-solid": "^1.9.12",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.0"
+  }
+}

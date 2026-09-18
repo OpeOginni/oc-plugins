@@ -1,0 +1,11 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugins": [
+    {
+      "package": "./dist",
+      "options": {
+        "pauseOnCompletion": true
+      }
+    }
+  ]
+}
