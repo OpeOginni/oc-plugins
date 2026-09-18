@@ -108,7 +108,8 @@ export default Plugin.define({
     }
     const slots = [
       ctx.ui.slot({ append: 'prompt.footer.status', render: () => ctx.ui.router.current().type === 'session' ? status() : null }),
-      ctx.ui.slot({ append: 'home.footer', render: () => ctx.ui.router.current().type === 'home' ? <box flexGrow={1} justifyContent="flex-end" paddingRight={1} paddingBottom={1}>{status()}</box> : null }),
+      // @ts-expect-error Available after the home.footer.status V2 API lands.
+      ctx.ui.slot({ append: 'home.footer.status', render: () => ctx.ui.router.current().type === 'home' ? status() : null }),
     ]
     void refresh()
     // Polling also recovers state after reconnects and changes in another TUI.
