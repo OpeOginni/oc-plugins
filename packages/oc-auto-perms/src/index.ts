@@ -1,7 +1,8 @@
 import { Plugin } from '@opencode/plugin'
-import { choice, TypeSafeClient } from '@typesafe-ai/sdk'
+import { choice } from '@typesafe-ai/sdk'
 import { decisionMessage, effectFrom, type Effect } from './decision.js'
 import { evaluatesTool, settingsFrom } from './config.js'
+import { gatewayFailureMessage, jevClient } from './gateway.js'
 
 const question = choice(
   {
@@ -26,7 +27,6 @@ const question = choice(
   },
 )
 
-const errorText = (error: unknown) => error instanceof Error ? error.message : String(error)
 const text = (value: unknown) => {
   try {
     return JSON.stringify(value) ?? String(value)
@@ -39,9 +39,7 @@ export default Plugin.define({
   id: 'oc-auto-perms',
   async setup(ctx) {
     const settings = settingsFrom(ctx.options)
-    const apiKey = process.env.TYPESAFE_API_KEY?.trim()
-    if (!apiKey) throw new Error('oc-auto-perms: set TYPESAFE_API_KEY in the OpenCode server environment.')
-    const client = new TypeSafeClient({ apiKey })
+    const client = await jevClient(settings, ctx.integration.connection)
     const calls = new Map<string, { tool: string; input: unknown }>()
 
     const evaluate = async (input: {
@@ -91,8 +89,8 @@ export default Plugin.define({
       const call = event.source?.type === 'tool' ? calls.get(event.source.id) : undefined
       const tool = call?.tool ?? event.action
       if (!evaluatesTool(settings.guardedTools, call?.tool, event.action)) return
-      // OpenCode owns explicit confirmation boundaries. Jev only narrows native allows.
-      if (event.effect === 'ask') return
+      // OpenCode owns explicit confirmation and denial boundaries. Jev only narrows native allows.
+      if (event.effect !== 'allow') return
       try {
         const result = await evaluate({
           sessionID: event.sessionID,
@@ -107,7 +105,7 @@ export default Plugin.define({
         event.message = result.message
       } catch (error) {
         event.effect = 'ask'
-        event.message = `Jev could not evaluate this action; user confirmation is required. (${errorText(error)})`
+        event.message = gatewayFailureMessage(settings.gateway, error)
       }
     })
   },

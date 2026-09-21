@@ -10,7 +10,9 @@
     {
       "package": "./dist",
       "options": {
-        // Set TYPESAFE_API_KEY in .env or the server environment.
+        // Defaults to TypeSafe. Set JEV_API_KEY for any gateway.
+        // OpenRouter, Vercel, and Zen first reuse their connected OpenCode account.
+        "gateway": "typesafe",
         // Only these tools incur a Jev evaluation.
         "guardedTools": ["shell", "webfetch", "websearch"],
         "permissions": [

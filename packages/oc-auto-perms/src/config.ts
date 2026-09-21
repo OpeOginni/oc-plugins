@@ -1,8 +1,19 @@
 export type Settings = {
+  gateway: Gateway
+  model: string
   guardedTools: 'all' | string[]
   permissions: PermissionPolicy
   minConfidence: number
   historyLimit: number
+}
+
+export type Gateway = 'typesafe' | 'openrouter' | 'vercel' | 'opencode'
+
+const defaultModel: Record<Gateway, string> = {
+  typesafe: 'jev-latest',
+  openrouter: 'jev-latest',
+  vercel: 'typesafe-ai/jev',
+  opencode: 'jev-1.13',
 }
 
 export type PermissionRule = {
@@ -64,7 +75,11 @@ export const evaluatesTool = (selection: Settings['guardedTools'], ...candidates
 
 export const settingsFrom = (options: Record<string, unknown>): Settings => {
   if (options.tools !== undefined) throw new Error('oc-auto-perms: use options.guardedTools for the plugin-level tool selection.')
-  if (options.model !== undefined) throw new Error('oc-auto-perms: model is not configurable; Jev uses jev-latest.')
+  const gateway = options.gateway ?? 'typesafe'
+  if (gateway !== 'typesafe' && gateway !== 'openrouter' && gateway !== 'vercel' && gateway !== 'opencode') {
+    throw new Error('oc-auto-perms: options.gateway must be typesafe, openrouter, vercel, or opencode.')
+  }
+  const model = optionalString(options.model, 'options.model') ?? defaultModel[gateway]
   const guardedTools = toolSelection(options.guardedTools, 'options.guardedTools', 'all')
   const permissions = permissionsFrom(options.permissions)
 
@@ -78,5 +93,5 @@ export const settingsFrom = (options: Record<string, unknown>): Settings => {
     throw new Error('oc-auto-perms: options.historyLimit must be an integer between 1 and 50.')
   }
 
-  return { guardedTools, permissions, minConfidence, historyLimit }
+  return { gateway, model, guardedTools, permissions, minConfidence, historyLimit }
 }

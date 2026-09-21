@@ -7,6 +7,7 @@ test('confident decisions are applied', () => {
   assert.equal(effectFrom('deny', 0.95, 0.8), 'deny')
   assert.equal(effectFrom('ask', 0.99, 0.8), 'ask')
   assert.equal(effectFrom('allow', 0.99, 0.8, 'ask'), 'ask')
+  assert.equal(effectFrom('allow', 0.99, 0.8, 'deny'), 'deny')
 })
 
 test('uncertain decisions require confirmation', () => {
