@@ -1,6 +1,6 @@
 {
   "name": "oc-ping",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "OpenCode V2 iMessage notifications and permission/question replies powered by Photon.",
   "keywords": [
     "opencode",
@@ -43,18 +43,20 @@
     "release": "bun publish"
   },
   "dependencies": {
-    "@opencode/client": "0.0.0-beta-19378",
-    "@opencode/plugin": "0.0.0-beta-19378",
+    "@opencode/client": "2.2.6",
+    "@opencode/plugin": "2.2.6",
     "spectrum-ts": "12.8.0"
   },
   "peerDependencies": {
-    "@opentui/core": ">=0.5.10",
-    "@opentui/solid": ">=0.5.10",
+    "@opentui/core": ">=0.8.1",
+    "@opentui/solid": ">=0.8.1",
     "solid-js": ">=1.9.0"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",
     "@babel/preset-typescript": "^7.27.1",
+    "@opentui/core": "0.8.3",
+    "@opentui/solid": "0.8.3",
     "@types/node": "^22",
     "babel-preset-solid": "^1.9.12",
     "tsup": "^8.5.1",

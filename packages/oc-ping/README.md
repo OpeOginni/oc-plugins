@@ -4,6 +4,8 @@ An OpenCode V2 plugin that sends iMessage notifications through
 [Photon](https://photon.codes/) when an agent finishes, needs permission, or
 asks a question. You can reply from Messages to resolve requests remotely.
 
+Requires OpenCode 2.2.6 or newer. Settings changes sync between TUIs through plugin RPC events without periodic polling.
+
 ## Setup
 
 ### 1. Add Photon credentials

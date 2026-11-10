@@ -1,16 +1,14 @@
 import { Plugin } from '@opencode/plugin/tui'
-import { createSignal } from 'solid-js'
+import { createEffect, createSignal } from 'solid-js'
 import { Ping } from './rpc.js'
 import { settingsFrom, type Settings } from './policy.js'
 
 export default Plugin.define({
   id: 'oc-ping.tui',
   setup(ctx) {
-    const api = ctx.client.rpc(Ping)
     const [settings, setSettings] = createSignal<Settings>()
     const [connected, setConnected] = createSignal(false)
     let disposed = false
-    let busy = false
     let dialogOpen = false
     let rpcQueue = Promise.resolve()
     const controller = new AbortController()
@@ -20,11 +18,11 @@ export default Plugin.define({
       setSettings(settingsFrom(value))
       setConnected(true)
     }
-    // Preserve response order when a poll overlaps a toggle or a settings edit.
+    // Preserve response order when a refresh overlaps a toggle or a settings edit.
     const call = (method: 'get' | 'toggle' | 'update', input: unknown = {}) => {
       const requestOptions = options()
       const result = rpcQueue.then(async () => {
-        const value = await api[method](input, requestOptions)
+        const value = await ctx.client.rpc(Ping)[method](input, requestOptions)
         if (JSON.stringify(requestOptions.location) === JSON.stringify(options().location)) accept(value)
       })
       rpcQueue = result.catch(() => {})
@@ -36,16 +34,14 @@ export default Plugin.define({
       ctx.ui.toast.show({ title: 'oc-ping', message: 'Could not reach oc-ping. Check the server plugin and Photon setup.', variant: 'error' })
     }
     const refresh = async () => {
-      if (busy || disposed) return
-      busy = true
+      if (disposed) return
       try { await call('get') } catch { if (!disposed) setConnected(false) }
-      finally { busy = false }
     }
     const toggle = async () => {
       try {
         await call('toggle')
         if (disposed) return
-        ctx.ui.toast.show({ title: 'oc-ping', message: settings()?.away ? 'Away mode ON — all completions and input requests will ping.' : 'Away mode OFF — notification timers restored.', variant: 'success' })
+        ctx.ui.toast.show({ title: 'oc-ping', message: settings()?.away ? 'Away mode on. All completions and input requests will ping.' : 'Away mode off. Notification timers restored.', variant: 'success' })
       } catch { report() }
     }
     const dialog = async () => {
@@ -108,16 +104,27 @@ export default Plugin.define({
     }
     const slots = [
       ctx.ui.slot({ append: 'prompt.footer.status', render: () => ctx.ui.router.current().type === 'session' ? status() : null }),
-      // @ts-expect-error Available after the home.footer.status V2 API lands.
       ctx.ui.slot({ append: 'home.footer.status', render: () => ctx.ui.router.current().type === 'home' ? status() : null }),
     ]
-    void refresh()
-    // Polling also recovers state after reconnects and changes in another TUI.
-    const timer = setInterval(() => void refresh(), 3000)
+    let stopUpdates = () => {}
+    const subscribe = () => {
+      stopUpdates()
+      stopUpdates = ctx.client.rpc(Ping).events.on('updated', event => {
+        if (event.location.directory === options().location.directory) void refresh()
+      })
+      void refresh()
+    }
+    const stopReconnect = ctx.data.on('server.connected', subscribe)
+    const stopReload = ctx.data.on('plugin.updated', () => void refresh())
+    createEffect(() => {
+      subscribe()
+    })
     return () => {
       disposed = true
       controller.abort()
-      clearInterval(timer)
+      stopUpdates()
+      stopReconnect()
+      stopReload()
       unregisterCommands()
       slots.forEach(stop => stop())
     }
