@@ -18,6 +18,8 @@
     "release": "changeset publish"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.29.7"
+    "@changesets/cli": "^2.29.7",
+    "@opentui/core": "0.5.11",
+    "@opentui/solid": "0.5.11"
   }
 }
