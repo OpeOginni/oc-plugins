@@ -10,6 +10,7 @@ one monorepo and released as independent npm packages.
 | [`oc-auto-perms`](./packages/oc-auto-perms) | Universal intent-aware permissions powered by TypeSafe AI's Jev model |
 | [`oc-ping`](./packages/oc-ping) | **WIP** — iMessage notifications and remote replies powered by Photon |
 | [`oc-invaders`](./packages/oc-invaders) | **WIP** — Play TUI Invaders while an OpenCode agent works |
+| [`oc-hush`](./packages/oc-hush) | **WIP** Private credential requests and reference-based authenticated HTTP |
 
 ## Development
 
