@@ -1,6 +1,6 @@
 {
   "name": "oc-auto-perms",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "description": "Intent-aware OpenCode permissions powered by TypeSafe AI's Jev model.",
   "keywords": [
     "opencode",
@@ -42,7 +42,7 @@
     "release": "bun publish"
   },
   "dependencies": {
-    "@opencode/plugin": "^2.0.12",
+    "@opencode/plugin": "2.2.6",
     "@typesafe-ai/sdk": "^0.6.0"
   },
   "devDependencies": {

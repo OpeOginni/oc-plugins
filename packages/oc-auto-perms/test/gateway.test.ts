@@ -20,7 +20,18 @@ test('gateway credentials reuse connected OpenCode accounts', async () => {
 test('every gateway falls back to the shared environment variable', async () => {
   assert.equal(await apiKeyFor('typesafe', connections(), { JEV_API_KEY: 'typesafe-key' }), 'typesafe-key')
   assert.equal(await apiKeyFor('openrouter', connections(), { JEV_API_KEY: 'router-key' }), 'router-key')
-  await assert.rejects(apiKeyFor('opencode', connections(), {}), /OpenCode Zen credential found at startup.*set JEV_API_KEY/)
+  await assert.rejects(apiKeyFor('opencode', connections(), {}), /OpenCode Zen credential found.*set JEV_API_KEY/)
+})
+
+test('gateway credential resolution follows account changes', async () => {
+  let key = 'first-key'
+  const active = {
+    active: async () => ({}),
+    resolve: async () => ({ type: 'key', key }),
+  } as unknown as Connections
+  assert.equal(await apiKeyFor('openrouter', active, {}), 'first-key')
+  key = 'second-key'
+  assert.equal(await apiKeyFor('openrouter', active, {}), 'second-key')
 })
 
 test('runtime failures produce actionable confirmation messages', () => {

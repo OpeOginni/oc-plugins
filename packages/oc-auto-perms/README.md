@@ -2,6 +2,8 @@
 
 Intent-aware permissions for OpenCode V2, powered by TypeSafe AI's Jev decision model.
 
+Requires OpenCode 2.2.6 or newer.
+
 Unlike static permission rules, `oc-auto-perms` evaluates the policy, recent user requests, and full tool input together. A rule such as “only access google.com” therefore applies whether the agent uses `webfetch`, `curl`, or another tool.
 
 ## Setup
@@ -69,7 +71,7 @@ The plugin supports TypeSafe, OpenRouter, Vercel AI Gateway, and OpenCode Zen th
 
 For OpenRouter, Vercel, and Zen, the plugin first tries the active account configured through OpenCode's `/connect`. If none is available, every gateway falls back to the same `JEV_API_KEY` environment variable. TypeSafe uses `JEV_API_KEY` directly because it is not an OpenCode provider.
 
-The plugin verifies that a credential exists when it starts and fails to load with a gateway-specific setup error when none is available. A later evaluation failure—such as rejected credentials, insufficient credits, rate limiting, an unavailable model, timeout, or provider outage—never silently allows or denies the action: the permission falls back to user confirmation with an actionable error message. Existing native OpenCode `ask` and `deny` decisions remain unchanged.
+The plugin resolves the active gateway credential for each evaluation, so account switches and reconnects take effect without reloading it. Missing credentials, rejected credentials, insufficient credits, rate limits, unavailable models, timeouts, and provider outages fall back to user confirmation with an actionable error message. Existing native OpenCode `ask` and `deny` decisions remain unchanged.
 
 Calls still go directly to each gateway's typed System One endpoint rather than OpenCode's text-generation route. This preserves Jev's choice and confidence response.
 

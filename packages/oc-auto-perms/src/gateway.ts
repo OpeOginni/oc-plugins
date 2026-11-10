@@ -52,7 +52,7 @@ export const apiKeyFor = async (
   const key = env.JEV_API_KEY?.trim()
   if (key) return key
   const connectionHint = definition.integrationID ? `connect ${definition.name} in OpenCode or ` : ''
-  throw new Error(`oc-auto-perms: no ${definition.name} credential found at startup; ${connectionHint}set JEV_API_KEY.`)
+  throw new Error(`oc-auto-perms: no ${definition.name} credential found; ${connectionHint}set JEV_API_KEY.`)
 }
 
 const unexpectedError = (error: unknown) => {
