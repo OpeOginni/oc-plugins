@@ -1,0 +1,70 @@
+{
+  "name": "oc-hush",
+  "version": "0.1.1",
+  "description": "Let OpenCode use credentials without putting them in the conversation.",
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "secrets",
+    "credentials",
+    "codemode"
+  ],
+  "author": "Ope Oginni",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpeOginni/oc-plugins.git",
+    "directory": "packages/oc-hush"
+  },
+  "homepage": "https://github.com/OpeOginni/oc-plugins/tree/main/packages/oc-hush#readme",
+  "bugs": {
+    "url": "https://github.com/OpeOginni/oc-plugins/issues"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./tui": "./dist/tui.js",
+    "./rpc": "./dist/rpc.js",
+    "./gui-experimental": "./dist/gui-experimental.cjs"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "tsup && vite build",
+    "prepack": "bun run build",
+    "check": "tsc --noEmit && tsc --noEmit -p tsconfig.gui.json",
+    "test": "bun test test/*.test.ts",
+    "prepublishOnly": "bun run check && bun run test",
+    "publish:dry-run": "bun publish --dry-run",
+    "release": "bun publish"
+  },
+  "dependencies": {
+    "@opencode/plugin": "2.2.6",
+    "zod": "4.1.8"
+  },
+  "peerDependencies": {
+    "@opentui/core": ">=0.8.1",
+    "@opentui/solid": ">=0.8.1",
+    "solid-js": ">=1.9.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-typescript": "^7.27.1",
+    "@opentui/core": "0.8.3",
+    "@opentui/solid": "0.8.3",
+    "@types/bun": "^1.4.2",
+    "@types/node": "^22",
+    "babel-preset-solid": "^1.9.12",
+    "solid-js": "1.9.15",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.0",
+    "vite": "7.3.7",
+    "vite-plugin-solid": "2.11.10"
+  }
+}
