@@ -4,6 +4,8 @@ An OpenCode V2 CLI plugin that embeds
 [`tui-invaders`](https://github.com/OpeOginni/tui-invaders) in the active
 session so you can play while an agent works.
 
+The plugin SDK is pinned to OpenCode 2.2.6. The game dependency still targets OpenTUI 0.5, so its development dependencies remain pinned to that version. Migrating the game to the current OpenTUI runtime is separate work in `tui-invaders`.
+
 ## Setup
 
 Add the plugin to your OpenCode configuration:

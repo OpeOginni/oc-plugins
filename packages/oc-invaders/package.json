@@ -1,6 +1,6 @@
 {
   "name": "oc-invaders",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Play TUI Invaders inside OpenCode while your agent works.",
   "keywords": [
     "opencode",
@@ -43,17 +43,19 @@
     "release": "bun publish"
   },
   "dependencies": {
-    "@opencode/plugin": "0.0.0-beta-19378",
+    "@opencode/plugin": "2.2.6",
     "tui-invaders": "^0.3.0"
   },
   "peerDependencies": {
-    "@opentui/core": ">=0.5.11",
-    "@opentui/solid": ">=0.5.10",
+    "@opentui/core": ">=0.8.1",
+    "@opentui/solid": ">=0.8.1",
     "solid-js": ">=1.9.0"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",
     "@babel/preset-typescript": "^7.27.1",
+    "@opentui/core": "0.5.11",
+    "@opentui/solid": "0.5.11",
     "@types/bun": "^1.4.2",
     "@types/node": "^22",
     "babel-preset-solid": "^1.9.12",
