@@ -62,7 +62,7 @@ export default Plugin.define({
     }
     const scoped = async (sessionID: string) => {
       const session = await ctx.session.get({ sessionID })
-      if (session.location.workspaceID !== ctx.location.workspaceID || resolve(session.location.directory) !== resolve(ctx.location.directory)) return undefined
+      if (resolve(session.location.directory) !== resolve(ctx.location.directory)) return undefined
       if (session.parentID && ctx.options.includeSubagents !== true) return undefined
       return session
     }
@@ -80,7 +80,7 @@ export default Plugin.define({
       }
       // Fail closed if discovery found a different service without this session.
       await client.session.get({ sessionID })
-      return client.form
+      return client.session.form
     }
     const notifyRequest = async (kind: Pending['kind'], sessionID: string, requestID: string, body: string, replyHint?: string) => {
       const marker = `request/${requestID}`
@@ -103,7 +103,7 @@ export default Plugin.define({
         if (!await scoped(item.sessionID)) return false
         return item.kind === 'permission'
           ? (await ctx.permission.list({ sessionID: item.sessionID })).some(r => r.id === item.requestID)
-          : (await (await forms(item.sessionID)).state({ sessionID: item.sessionID, formID: item.requestID })).status === 'pending'
+          : (await (await forms(item.sessionID)).get({ sessionID: item.sessionID, formID: item.requestID })).state.status === 'pending'
       },
       notify: item => notifyRequest(item.kind, item.sessionID, item.requestID, item.body, item.replyHint),
       onError: error => log('Delayed request check failed', error),
@@ -126,7 +126,7 @@ export default Plugin.define({
       if (!selectedRaw && !selectedDefault) return
       const session = sessionID ? await scoped(sessionID) : undefined
       if (sessionID && !session) return
-      if (!sessionID && (!event.location || resolve(event.location.directory) !== resolve(ctx.location.directory) || event.location.workspaceID !== ctx.location.workspaceID)) return
+      if (!sessionID && (!event.location || resolve(event.location.directory) !== resolve(ctx.location.directory))) return
       const title = session?.title ?? ctx.location.directory
       if (event.type === 'permission.asked') {
         const r = event.data
@@ -165,21 +165,20 @@ export default Plugin.define({
       if (!await scoped(pending.sessionID)) return
       try {
         if (pending.kind === 'permission') {
-          const reply = permissionReply(text)
+          const decision = permissionReply(text)
           await ctx.permission.get({ sessionID: pending.sessionID, requestID: pending.requestID })
-          await ctx.permission.reply({ sessionID: pending.sessionID, requestID: pending.requestID, reply })
+          await ctx.permission.reply({ sessionID: pending.sessionID, requestID: pending.requestID, decision })
         } else {
           const api = await forms(pending.sessionID)
           const input = { sessionID: pending.sessionID, formID: pending.requestID }
-          const state = await api.state(input)
-          if (state.status !== 'pending') {
+          const current = await api.get(input)
+          if (current.state.status !== 'pending') {
             await ctx.storage.remove(`outbound/${targetID}`)
             await respond('This question has already been resolved.')
             return
           }
-          const current = await api.get(input)
           if (text.trim() === '/cancel') await api.cancel(input)
-          else await api.reply({ ...input, answer: formAnswer(current as FormInfo, text) })
+          else await api.reply({ ...input, answer: formAnswer(current, text) })
         }
       } catch {
         await respond('Could not apply reply. Check the answer format and whether the request is still pending in OpenCode.')
@@ -205,6 +204,7 @@ export default Plugin.define({
       const next = settingsFrom(input ?? { away: !settings.away }, settings)
       await ctx.storage.set(settingsKey, next)
       settings = next
+      await rpc.events.emit('updated', next)
       enqueue(requests.flush)
       return { ...settings }
     })

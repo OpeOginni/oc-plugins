@@ -12,7 +12,7 @@ const settings = {
 
 export const Ping = Rpc.define({
   id: 'oc-ping',
-  events: {},
+  events: { updated: { schema: settings } },
   methods: {
     get: { input: { type: 'object', additionalProperties: false }, output: settings },
     update: { input: settings, output: settings },
