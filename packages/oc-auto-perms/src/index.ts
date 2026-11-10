@@ -39,7 +39,6 @@ export default Plugin.define({
   id: 'oc-auto-perms',
   async setup(ctx) {
     const settings = settingsFrom(ctx.options)
-    const client = await jevClient(settings, ctx.integration.connection)
     const calls = new Map<string, { tool: string; input: unknown }>()
 
     const evaluate = async (input: {
@@ -56,6 +55,7 @@ export default Plugin.define({
         .filter(message => message.type === 'user')
         .slice(-settings.historyLimit)
         .map(message => message.text)
+      const client = await jevClient(settings, ctx.integration.connection)
       const response = await client.systemOne({
         state: {
           permission_policy: settings.permissions,
