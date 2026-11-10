@@ -1,6 +1,6 @@
 # oc-hush
 
-![oc-hush: your agent uses the key, it never sees it](media/banner.png)
+![oc-hush: your agent uses the key, it never sees it](assets/banner.png)
 
 Credentials your agent can use without reading them.
 
