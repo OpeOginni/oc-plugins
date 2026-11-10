@@ -1,12 +1,12 @@
 # oc-hush
 
-![oc-hush: your agent uses the key, it never sees it](assets/banner.png)
+![oc-hush: your agent uses the key, it never sees it](https://raw.githubusercontent.com/OpeOginni/oc-plugins/main/packages/oc-hush/assets/banner.png)
 
 Credentials your agent can use without reading them.
 
 When a command needs an API key or token, Hush asks you for it in a private prompt instead of the chat. The agent gets to use it in its command, but the key itself never reaches the model or the conversation.
 
-**WIP.** Works in the OpenCode TUI and desktop app. Requires OpenCode 2.2.6 or newer.
+Works in the OpenCode TUI and desktop app. Requires OpenCode 2.2.6 or newer.
 
 ## Install
 
